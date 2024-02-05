@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.entity.Category;
 import com.example.entity.Item;
 import com.example.form.ItemForm;
+import com.example.service.CategoryService;
 import com.example.service.ItemService;
 
 @Controller
@@ -20,41 +22,55 @@ import com.example.service.ItemService;
 public class ItemController {
 	
 	private final ItemService itemService;
+	private final CategoryService categoryService;
 	
 	@Autowired
-	public ItemController(ItemService itemService) {
+	public ItemController(ItemService itemService, CategoryService categoryService) {
 		this.itemService = itemService;
+		this.categoryService = categoryService;
 	}
 	
 	@GetMapping
 	public String index(Model model) {
-		List<Item> items = this.itemService.findAll();
-		System.out.println(items.toString());
+		List<Item> items = this.itemService.findByDeletedAtIsNull();
+		model.addAttribute("items", items);
 		return "item/index";
 	}
 	
 	@GetMapping("new")
-	public String tnew(@ModelAttribute("itemForm") ItemForm itemForm) {
+	public String tnew(@ModelAttribute("itemForm") ItemForm itemForm, Model model) {
+		List<Category> categories = this.categoryService.findAll();
+		model.addAttribute("categories", categories);
 		return "item/new";
 	}
 	
 	@PostMapping("create")
 	public String create(ItemForm itemForm) {
+		this.itemService.save(itemForm);
 		return "redirect:/item";
 	}
 	
 	@GetMapping("edit/{id}")
 	public String edit(@PathVariable("id") Integer id, Model model, @ModelAttribute("itemForm") ItemForm itemForm) {
+		Item item = this.itemService.findById(id);
+		itemForm.setName(item.getName());
+		itemForm.setPrice(item.getPrice());
+		itemForm.setCategoryId(item.getCategoryId());
+		List<Category> categories = this.categoryService.findAll();
+		model.addAttribute("id", id);
+		model.addAttribute("categories", categories);
 		return "item/edit";
 	}
 	
 	@PostMapping("edit/{id}")
 	public String update(@PathVariable("id") Integer id, @ModelAttribute("itemForm") ItemForm itemForm) {
+		this.itemService.update(id, itemForm);
 		return "redirect:/item";
 	}
 	
 	@PostMapping("delete/{id}")
 	public String delete(@PathVariable("id") Integer id) {
+		this.itemService.delete(id);
 		return "redirect:/item";
 	}
 }

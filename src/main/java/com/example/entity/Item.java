@@ -36,4 +36,7 @@ public class Item {
 	@ManyToOne
     @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID", insertable = false, updatable = false)
     private Category category;
+	
+	@Column(name = "STOCK")
+	private Integer stock;
 }

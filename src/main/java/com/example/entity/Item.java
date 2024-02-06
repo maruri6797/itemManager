@@ -34,6 +34,6 @@ public class Item {
 	private Integer categoryId;
 	
 	@ManyToOne
-	@JoinColumn(name = "CATEGORY_ID", insertable = false, updatable = false)
-	private Category category;
+    @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    private Category category;
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmls:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
 		<title>商品編集</title>
@@ -24,8 +24,8 @@
 			</div>
 			<div>
 				<select th:field="*{categoryId}">
-					<option th:each="category : ${categories" th:value="${category.id}" th:text="${category.name}"></option>
-				</select>
+	                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+	            </select>
 			</div>
 			<div>
 				<input type="submit" name="send" value="登録する">
